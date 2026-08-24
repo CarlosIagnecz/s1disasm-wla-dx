@@ -359,7 +359,7 @@ CheckSumCheck:
 .loop:
 		add.w	(a0)+,d1
 		cmp.l	a0,d0
-		bhs.s	.loop
+		bcc.s	.loop
 		movea.l	#Checksum,a1	; read the checksum
 		cmp.w	(a1),d1		; compare checksum in header to ROM
 		bne.w	CheckSumError	; if they don't match, branch
@@ -799,7 +799,7 @@ VBla_08:
 		; changed for the water. Without this special check, the water surface would violently flicker
 		; whenever it's near the top of the screen. It's a rather dirty workaround, but it works.
 		cmpi.b	#96,(v_hbla_line).w		; is LZ water surface within 96 pixels of the top of the screen?
-		bhs.s	VBla_UpdateScreen		; if not, do screen updates now
+		bcc.s	VBla_UpdateScreen		; if not, do screen updates now
 		move.b	#1,(f_doupdatesinhblank).w	; otherwise, we don't have enough time to do them now before HBlank hits, defer updates to then
 		addq.l	#4,sp				; skip return address (i.e. postpone updating the sound driver as well)
 		bra.w	VBla_Exit			; go straight back to to the VBlank exit
@@ -1915,7 +1915,7 @@ loc_202A:
 
 loc_2034:
 		cmpi.w	#$60,d0
-		bhs.s	loc_203E
+		bcc.s	loc_203E
 		move.w	(a0)+,(a1,d0.w)
 
 loc_203E:
@@ -2708,7 +2708,7 @@ LevSel_UpDown:
 		btst	#bitUp,d1		; is up held?
 		beq.s	LevSel_Down		; if not, branch
 		subq.w	#1,d0			; move up 1 selection
-		bhs.s	LevSel_Down		; if entry is still valid, branch
+		bcc.s	LevSel_Down		; if entry is still valid, branch
 		moveq	#levsel_line_count-1,d0	; if selection moves below 0, jump to selection last row
 
 LevSel_Down:
@@ -2736,7 +2736,7 @@ LevSel_SndTest:
 		btst	#bitL,d1		; is left pressed?
 		beq.s	LevSel_Right		; if not, branch
 		subq.w	#1,d0			; subtract 1 from sound test
-		bhs.s	LevSel_Right		; is result still positive? if yes, branch
+		bcc.s	LevSel_Right		; is result still positive? if yes, branch
 		moveq	#sfx__Last-$80,d0 	; if sound test moves below 0, set to last entry (non-$80 based)
 
 LevSel_Right:
@@ -3210,7 +3210,7 @@ Level_MainLoop:
 		tst.w	(v_debuguse).w	; is debug mode being used?
 		bne.s	Level_DoScroll	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w ; has Sonic just died?
-		bhs.s	Level_SkipScroll ; if yes, branch
+		bcc.s	Level_SkipScroll ; if yes, branch
 
 Level_DoScroll:
 		bsr.w	DeformLayers
@@ -3595,7 +3595,7 @@ loc_48BE:
 		moveq	#3,d6
 		moveq	#0,d4
 		cmpi.w	#4-1,d7 ; $8000
-		bhs.s	loc_48CC
+		bcc.s	loc_48CC
 		moveq	#1,d4
 
 loc_48CC:
@@ -3831,7 +3831,7 @@ SS_BGAnimate:
 
 loc_4BF6:
 		cmpi.w	#8,d0
-		bhs.s	loc_4C4E
+		bcc.s	loc_4C4E
 		cmpi.w	#6,d0
 		bne.s	loc_4C10
 		addq.w	#1,(v_bg3screenposx).w
@@ -3974,7 +3974,7 @@ Cont_MainLoop:
 		move.b	#$16,(v_vbla_routine).w
 		bsr.w	WaitForVBla
 		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	loc_4DF2
+		bcc.s	loc_4DF2
 		disable_ints
 		move.w	(v_generictimer).w,d1
 		divu.w	#60,d1
@@ -3986,9 +3986,9 @@ loc_4DF2:
 		jsr	(ExecuteObjects).l
 		jsr	(BuildSprites).l
 		cmpi.w	#$180,(v_player+obX).w ; has Sonic run off screen?
-		bhs.s	Cont_GotoLevel	; if yes, branch
+		bcc.s	Cont_GotoLevel	; if yes, branch
 		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	Cont_MainLoop
+		bcc.s	Cont_MainLoop
 		tst.w	(v_generictimer).w
 		bne.w	Cont_MainLoop
 		move.b	#id_Sega,(v_gamemode).w ; go to Sega screen
@@ -4179,7 +4179,7 @@ End_MoveSonic:
 		move.b	(v_sonicend).w,d0
 		bne.s	End_MoveSon2
 		cmpi.w	#$90,(v_player+obX).w ; has Sonic passed $90 on x-axis?
-		bhs.s	End_MoveSonExit	; if not, branch
+		bcc.s	End_MoveSonExit	; if not, branch
 
 		addq.b	#2,(v_sonicend).w
 		move.b	#1,(f_lockctrl).w ; lock player's controls
@@ -4303,7 +4303,7 @@ EndingDemoLoad:
 		move.w	d0,(v_zone).w	; set level from level array
 		addq.w	#1,(v_creditsnum).w
 		cmpi.w	#9,(v_creditsnum).w ; have credits finished?
-		bhs.s	EndDemo_Exit	; if yes, branch
+		bcc.s	EndDemo_Exit	; if yes, branch
 		move.w	#$8001,(f_demo).w ; set demo+ending mode
 		move.b	#id_Demo,(v_gamemode).w ; set game mode to 8 (demo)
 		move.b	#3,(v_lives).w	; set lives to 3
@@ -4576,7 +4576,7 @@ PlatformObject:
 		bmi.w	Plat_Exit
 		add.w	d1,d1
 		cmp.w	d1,d0
-		bhs.w	Plat_Exit
+		bcc.w	Plat_Exit
 
 Plat_NoXCheck:
 		move.w	obY(a0),d0
@@ -4597,7 +4597,7 @@ Platform3:
 		tst.b	(f_playerctrl).w
 		bmi.w	Plat_Exit
 		cmpi.b	#6,obRoutine(a1)
-		bhs.w	Plat_Exit
+		bcc.w	Plat_Exit
 		add.w	d0,d2
 		addq.w	#3,d2
 		move.w	d2,obY(a1)
@@ -4658,7 +4658,7 @@ SlopeObject:
 		bmi.s	Plat_Exit
 		add.w	d1,d1
 		cmp.w	d1,d0
-		bhs.s	Plat_Exit
+		bcc.s	Plat_Exit
 		btst	#0,obRender(a0)
 		beq.s	loc_754A
 		not.w	d0
@@ -4687,7 +4687,7 @@ Swing_Solid:
 		bmi.w	Plat_Exit
 		add.w	d1,d1
 		cmp.w	d1,d0
-		bhs.w	Plat_Exit
+		bcc.w	Plat_Exit
 		move.w	obY(a0),d0
 		sub.w	d3,d0
 		bra.w	Platform3
@@ -4763,7 +4763,7 @@ MvSonic2:
 		tst.b	(f_playerctrl).w
 		bmi.s	locret_7B62
 		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	locret_7B62
+		bcc.s	locret_7B62
 		tst.w	(v_debuguse).w
 		bne.s	locret_7B62
 		moveq	#0,d1
@@ -4833,7 +4833,7 @@ loc_84B2:
 		move.b	obActWid(a0),obActWid(a1)
 		move.b	(a4)+,ledge_timedelay(a1)
 		cmpa.l	a0,a1
-		bhs.s	loc_84EE
+		bcc.s	loc_84EE
 		bsr.w	DisplaySprite1
 
 loc_84EE:
@@ -4990,16 +4990,16 @@ Obj44_SolidWall2:
 		move.w	d2,d4
 		add.w	d4,d4
 		cmp.w	d4,d3
-		bhs.s	loc_8B48
+		bcc.s	loc_8B48
 		tst.b	(f_playerctrl).w
 		bmi.s	loc_8B48
 		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	loc_8B48
+		bcc.s	loc_8B48
 		tst.w	(v_debuguse).w
 		bne.s	loc_8B48
 		move.w	d0,d5
 		cmp.w	d0,d1
-		bhs.s	loc_8B30
+		bcc.s	loc_8B30
 		add.w	d1,d1
 		sub.w	d1,d0
 		move.w	d0,d5
@@ -5008,7 +5008,7 @@ Obj44_SolidWall2:
 loc_8B30:
 		move.w	d3,d1
 		cmp.w	d3,d2
-		bhs.s	loc_8B3C
+		bcc.s	loc_8B3C
 		sub.w	d4,d3
 		move.w	d3,d1
 		neg.w	d1
@@ -5497,7 +5497,7 @@ ExecuteObjects:
 		moveq	#(v_objspace_end-v_objspace)/object_size-1,d7
 		moveq	#0,d0
 		cmpi.b	#6,(v_player+obRoutine).w
-		bhs.s	loc_D362
+		bcc.s	loc_D362
 
 loc_D348:
 		move.b	obID(a0),d0		; load object number from RAM
@@ -5631,7 +5631,7 @@ BuildSprites:
 		cmpi.w	#$60,d2
 		blo.s	.skipObject
 		cmpi.w	#$180,d2
-		bhs.s	.skipObject
+		bcc.s	.skipObject
 
 	.drawObject:
 		movea.l	obMap(a0),a1
@@ -5898,7 +5898,7 @@ OPL_ClrList:
 		moveq	#0,d2
 		move.w	(v_screenposx).w,d6
 		subi.w	#$80,d6
-		bhs.s	loc_D93C
+		bcc.s	loc_D93C
 		moveq	#0,d6
 
 loc_D93C:
@@ -6350,7 +6350,7 @@ ConvertCollisionArray:
 	; the collision in this column is.
 .processColumnLoop1:
 		lsr.w	#1,d0
-		bhs.s	.pixelNotSolid1
+		bcc.s	.pixelNotSolid1
 		addq.b	#1,d2
 
 .pixelNotSolid1:
@@ -6367,7 +6367,7 @@ ConvertCollisionArray:
 	; the collision in this column is (the resulting number is negative).
 .processColumnLoop2:
 		lsl.w	#1,d0
-		bhs.s	.pixelNotSolid2
+		bcc.s	.pixelNotSolid2
 		subq.b	#1,d2
 
 .pixelNotSolid2:
@@ -7037,13 +7037,13 @@ loc_1B210:
 		cmpi.w	#$70,d3
 		blo.s	loc_1B268
 		cmpi.w	#$1D0,d3
-		bhs.s	loc_1B268
+		bcc.s	loc_1B268
 		move.w	2(a4),d2
 		addi.w	#$F0,d2
 		cmpi.w	#$70,d2
 		blo.s	loc_1B268
 		cmpi.w	#$170,d2
-		bhs.s	loc_1B268
+		bcc.s	loc_1B268
 		lea	(v_ssblocktypes).l,a5
 		lsl.w	#3,d0
 		lea	(a5,d0.w),a5

@@ -12,7 +12,7 @@ WLA-DX has some slight syntax differences
 | Topic | asw/asm68k | wla-68000 |
 | --- | --- | --- |
 | Sizing jumps  | .s .w ?? .l | .b .w .l .d |
-| Sizing values | .b .w ?? .l | .b .w .l .d |
+| Sizing values | .b .w .l | .b .w .l |
 | Equates       | variable: equ calculation | .define variable calculation |
 | Equates       | variable: equ calculation | .define variable calculation |
 

@@ -1,29 +1,11 @@
-
-;
-; Sega Mega Drive/Genesis MC68000 Memory Map (WLA-DX repository)
-; 
-
-.MEMORYMAP
-DEFAULTSLOT 0
-	SLOT 0 START $000000 SIZE $400000 NAME "ROM"   ; 4MB ROM / Cartridge RAM / Cartridge
-	SLOT 1 START $A00000 SIZE   $2000 NAME "ZRAM"  ; 8KB Z80 RAM
-	SLOT 2 START $FF0000 SIZE  $10000 NAME "WRAM"  ; 64KB Work RAM
-.ENDME
-
-.ROMBANKSIZE $0FFFFF
-.ROMBANKS 1
+; ---------------------------------------------------------------------------
+; Variables
+; ---------------------------------------------------------------------------
 
 ; Undefined labels (TODO)
 .DEFINE v_systemstack 0 
 .DEFINE port_1_control_hi $A10008
 .DEFINE expansion_control_hi $A1000C
-.DEFINE z80_ram $A00000
-.DEFINE z80_ram_end $A02000
-
-.DEFINE z80_reset $A11200
-.DEFINE z80_bus_request $A11100
-.DEFINE vdp_data_port $C00000
-.DEFINE vdp_control_port $C00004
 
 ; Constants (TODO)
 .DEFINE tile_size 8*8/2	; size of a single 8x8 tile
