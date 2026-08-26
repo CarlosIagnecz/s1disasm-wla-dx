@@ -1,9 +1,9 @@
 # Sonic 1 disassembly for wla-dx compiler
+======
 ## This is a work in progress
-============
 
 See: http://info.sonicretro.org/Disassemblies
-- This fork is not affiliated with Sonic Retro)
+- (This fork is not affiliated with Sonic Retro)
 
 A fork of the very latest Sonic 1 Disassembly made for wla-dx.
 
