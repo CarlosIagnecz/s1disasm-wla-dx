@@ -1,5 +1,4 @@
 # Sonic 1 disassembly for wla-dx compiler
-======
 ## This is a work in progress
 
 See: http://info.sonicretro.org/Disassemblies
