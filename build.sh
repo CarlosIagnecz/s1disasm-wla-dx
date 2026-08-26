@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO: Merge both build scripts into a makefile
 
 output_filename="s1built"
 
@@ -17,12 +18,9 @@ mv Build/$output_filename".gen" Build/$output_filename".prev.gen"
 
 echo """\
 ----------------------------------------
----		Compiling...	     ---
+---           Compiling...           ---
 ----------------------------------------
 """
-# Link compiled binaries to make ROM file.
-
-
 
 # Compile libraries.
 # By default there are no libraries with ROM data.

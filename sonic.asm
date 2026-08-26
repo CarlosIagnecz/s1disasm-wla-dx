@@ -266,7 +266,7 @@ GameProgram:
 		beq.w	GameInit	; if yes, branch
 
 CheckSumCheck:
-	.IFEQ ChecksumSkip 0
+.IF ChecksumSkip == 0
 		movea.l	#EndOfHeader,a0	; start checking bytes after the header ($200)
 		movea.l	#RomEndLoc,a1	; stop at end of ROM
 		move.l	(a1),d0
@@ -278,7 +278,7 @@ CheckSumCheck:
 		movea.l	#Checksum,a1	; read the checksum
 		cmp.w	(a1),d1		; compare checksum in header to ROM
 		bne.w	CheckSumError	; if they don't match, branch
-	.ENDIF
+.ENDIF
 
 CheckSumOk:
 		lea	(v_crossresetram).w,a6
@@ -340,7 +340,7 @@ ptr_GM_Credits:	bra.w	GM_Credits	; Credits ($1C)
 
 .SECTION "Interrupts"	FORCE ALIGN $200
 ; ===========================================================================
-	if ChecksumSkip=0
+.IF ChecksumSkip == 0
 CheckSumError:
 		bsr.w	VDPSetupGame
 		move.l	#$C0000000,(vdp_control_port).l ; set VDP to CRAM write
@@ -351,7 +351,7 @@ CheckSumError:
 		dbf	d7,.fillred	; repeat until CRAM is filled
 
 		bra.b	* ; Endless loop
-	endif
+.ENDIF
 ; ===========================================================================
 
 BusError:
@@ -364,7 +364,7 @@ AddressError:
 
 IllegalInstr:
 		move.b	#6,(v_errortype).w
-		addq.d	#2,2(sp)
+		addq.l	#2,2(sp)
 		bra.b	loc_462
 
 ZeroDivide:
@@ -389,12 +389,12 @@ Trace:
 
 Line1010Emu:
 		move.b	#18,(v_errortype).w
-		addq.d	#2,2(sp)
+		addq.l	#2,2(sp)
 		bra.b	loc_462
 
 Line1111Emu:
 		move.b	#20,(v_errortype).w
-		addq.d	#2,2(sp)
+		addq.l	#2,2(sp)
 		bra.b	loc_462
 
 ErrorExcept:
@@ -405,27 +405,27 @@ ErrorExcept:
 loc_43A:
 		disable_ints
 		addq.w	#2,sp
-		move.d	(sp)+,(v_spbuffer).w
+		move.l	(sp)+,(v_spbuffer).w
 		addq.w	#2,sp
-		movem.d	d0-a7,(v_regbuffer).w
+		movem.l	d0-d7/a0-a7,(v_regbuffer).w
 		bsr.w	ShowErrorMessage
-		move.d	2(sp),d0
+		move.l	2(sp),d0
 		bsr.w	ShowErrorValue
-		move.d	(v_spbuffer).w,d0
+		move.l	(v_spbuffer).w,d0
 		bsr.w	ShowErrorValue
 		bra.b	loc_478
 ; ===========================================================================
 
 loc_462:
 		disable_ints
-		movem.d	d0-a7,(v_regbuffer).w
+		movem.l	d0-d7/a0-a7,(v_regbuffer).w
 		bsr.w	ShowErrorMessage
-		move.d	2(sp),d0
+		move.l	2(sp),d0
 		bsr.w	ShowErrorValue
 
 loc_478:
 		bsr.w	ErrorWaitForC
-		movem.d	(v_regbuffer).w,d0-a7
+		movem.l	(v_regbuffer).w,d0-d7/a0-a7
 		enable_ints
 		rte	
 
